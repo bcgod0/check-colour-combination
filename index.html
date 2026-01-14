@@ -1,408 +1,443 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Palette & Color Checker</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Palette Sync</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #4f46e5;
-            --primary-hover: #4338ca;
-            --bg: #f3f4f6;
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             --surface: #ffffff;
-            --text: #1f2937;
-            --border: #e5e7eb;
+            --text-main: #1e293b;
+            --text-sub: #64748b;
             --danger: #ef4444;
+            --input-bg: #f1f5f9;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
+            background: var(--bg-gradient);
+            color: var(--text-main);
             display: flex;
             justify-content: center;
             min-height: 100vh;
-            padding: 40px 20px;
+            margin: 0;
+            padding: 20px;
         }
 
         .container {
             width: 100%;
-            max-width: 500px;
+            max-width: 480px;
             background: var(--surface);
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            padding: 32px 24px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.1), 0 10px 15px -5px rgba(0, 0, 0, 0.04);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
-        h2 { text-align: center; margin-bottom: 5px; }
-        p.subtitle { text-align: center; color: #6b7280; margin-bottom: 25px; font-size: 0.9rem; }
+        /* Header Area */
+        header { text-align: center; margin-bottom: 10px; }
+        h2 { margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.5px; color: var(--text-main); }
+        p.subtitle { margin: 8px 0 0; color: var(--text-sub); font-size: 14px; }
 
+        /* Status Badge */
+        .status-badge {
+            align-self: center;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            background: #f1f5f9;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-sub);
+            transition: all 0.3s ease;
+        }
+        .status-badge.connected { background: #dcfce7; color: #166534; }
+        .dot { width: 6px; height: 6px; border-radius: 50%; background: #94a3b8; }
+        .dot.active { background: #16a34a; box-shadow: 0 0 0 2px #dcfce7; }
+
+        /* Inputs */
+        .input-group { display: flex; flex-direction: column; gap: 12px; }
+        
         .color-row {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 12px;
-            background: #fff;
+            gap: 12px;
+            background: var(--input-bg);
             padding: 6px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            transition: 0.2s;
+            padding-right: 16px;
+            border-radius: 14px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 2px solid transparent;
         }
 
         .color-row:focus-within {
+            background: #fff;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+            transform: translateY(-1px);
         }
 
-        /* Color Picker Reset */
-        input[type="color"] {
-            -webkit-appearance: none;
-            border: none;
-            width: 42px;
-            height: 42px;
-            cursor: pointer;
-            background: none;
-            border-radius: 6px;
+        /* Custom Color Picker Styling */
+        .picker-wrapper {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            overflow: hidden;
+            flex-shrink: 0;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
         
-        input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
-        input[type="color"]::-webkit-color-swatch { 
-            border: 1px solid rgba(0,0,0,0.1); 
-            border-radius: 6px; 
+        input[type="color"] {
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            padding: 0; margin: 0;
+            border: none;
+            cursor: pointer;
         }
 
         input[type="text"] {
             flex: 1;
+            background: none;
             border: none;
             outline: none;
             font-size: 16px;
-            color: var(--text);
+            font-weight: 500;
+            color: var(--text-main);
             font-family: 'Inter', sans-serif;
+            text-transform: capitalize;
         }
+        input[type="text"]::placeholder { color: #94a3b8; font-weight: 400; }
 
+        /* Action Button */
         button.primary-btn {
             width: 100%;
-            padding: 14px;
+            padding: 16px;
             font-size: 16px;
             font-weight: 600;
-            background-color: var(--primary);
             color: white;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             border: none;
-            border-radius: 8px;
+            border-radius: 16px;
             cursor: pointer;
-            margin-top: 15px;
-            transition: background 0.2s;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+            transition: all 0.2s ease;
+            margin-top: 10px;
         }
+        button.primary-btn:active { transform: scale(0.98); box-shadow: 0 2px 6px rgba(79, 70, 229, 0.2); }
 
-        button.primary-btn:hover { background-color: var(--primary-hover); }
-
+        /* Feedback Message */
         .result {
-            margin-top: 15px;
             text-align: center;
+            font-size: 14px;
             font-weight: 500;
             min-height: 20px;
-            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s;
         }
+        .result.show { opacity: 1; }
 
-        .history {
-            margin-top: 30px;
-            border-top: 1px solid var(--border);
-            padding-top: 20px;
+        /* History Section */
+        .history { margin-top: 10px; }
+        .history h3 {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-sub);
+            font-weight: 700;
+            margin-bottom: 16px;
         }
-
-        .history h3 { font-size: 14px; color: #6b7280; text-transform: uppercase; margin-bottom: 15px; }
 
         .history-list {
             list-style: none;
-            max-height: 300px;
-            overflow-y: auto;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         .history-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #f9fafb;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
             padding: 12px;
-            margin-bottom: 8px;
-            border-radius: 8px;
-            border: 1px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: slideIn 0.3s ease-out forwards;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .history-item:hover { border-color: var(--border); background: #fff; }
+        .palette-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+            min-width: 0; /* Fix flex text overflow */
+        }
 
-        .palette-preview { display: flex; align-items: center; gap: 8px; }
-        
+        .palette-preview { display: flex; gap: 6px; }
         .color-dot {
-            width: 24px;
-            height: 24px;
+            width: 24px; height: 24px;
             border-radius: 50%;
-            border: 1px solid rgba(0,0,0,0.1);
-            flex-shrink: 0;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .palette-text {
             font-size: 13px;
-            color: #4b5563;
-            margin-left: 8px;
+            color: var(--text-sub);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 180px;
         }
 
+        /* Trash Icon Button */
         .delete-btn {
-            background: none;
+            width: 36px;
+            height: 36px;
             border: none;
-            color: #ef4444;
-            font-size: 12px;
-            font-weight: 600;
+            background: #fee2e2;
+            color: var(--danger);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            padding: 6px 10px;
-            border-radius: 4px;
-            background-color: #fef2f2;
+            transition: all 0.2s;
+            margin-left: 12px;
+            flex-shrink: 0;
         }
+        .delete-btn:hover { background: #fecaca; transform: scale(1.05); }
+        .delete-btn svg { width: 18px; height: 18px; stroke-width: 2; }
 
-        .delete-btn:hover { background-color: #fee2e2; }
-
-        /* Animation for error shake */
-        .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
-        @keyframes shake {
-            10%, 90% { transform: translate3d(-1px, 0, 0); }
-            20%, 80% { transform: translate3d(2px, 0, 0); }
-            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-            40%, 60% { transform: translate3d(4px, 0, 0); }
-        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Palette Checker</h2>
-    <p class="subtitle">Enter colors (Name, Hex, RGB) to validate</p>
+    <header>
+        <h2>Palette Sync</h2>
+        <p class="subtitle">Live cloud storage</p>
+    </header>
+    
+    <div id="statusBadge" class="status-badge">
+        <div id="statusDot" class="dot"></div>
+        <span id="statusText">Connecting...</span>
+    </div>
 
-    <div id="inputs-wrapper">
+    <div class="input-group">
         <div class="color-row">
-            <input type="color" id="picker1" value="#ffffff" oninput="syncInputs('picker1', 'text1')">
-            <input type="text" id="text1" placeholder="e.g. Red or #ff0000" oninput="syncInputs('text1', 'picker1')">
+            <div class="picker-wrapper"><input type="color" id="picker1" value="#ffffff"></div>
+            <input type="text" id="text1" placeholder="Color 1">
         </div>
         <div class="color-row">
-            <input type="color" id="picker2" value="#ffffff" oninput="syncInputs('picker2', 'text2')">
-            <input type="text" id="text2" placeholder="e.g. Blue" oninput="syncInputs('text2', 'picker2')">
+            <div class="picker-wrapper"><input type="color" id="picker2" value="#ffffff"></div>
+            <input type="text" id="text2" placeholder="Color 2">
         </div>
         <div class="color-row">
-            <input type="color" id="picker3" value="#ffffff" oninput="syncInputs('picker3', 'text3')">
-            <input type="text" id="text3" placeholder="e.g. #00ff00" oninput="syncInputs('text3', 'picker3')">
+            <div class="picker-wrapper"><input type="color" id="picker3" value="#ffffff"></div>
+            <input type="text" id="text3" placeholder="Color 3">
         </div>
         <div class="color-row">
-            <input type="color" id="picker4" value="#ffffff" oninput="syncInputs('picker4', 'text4')">
-            <input type="text" id="text4" placeholder="e.g. rgb(0,0,0)" oninput="syncInputs('text4', 'picker4')">
+            <div class="picker-wrapper"><input type="color" id="picker4" value="#ffffff"></div>
+            <input type="text" id="text4" placeholder="Color 4">
         </div>
     </div>
 
-    <button class="primary-btn" id="checkBtn" onclick="checkCombination()">Check & Save Palette</button>
+    <button class="primary-btn" id="saveBtn">Save Palette</button>
     <div class="result" id="result"></div>
 
     <div class="history">
-        <h3>Saved Palettes</h3>
+        <h3>Shared History</h3>
+        <div id="loader" style="text-align: center; font-size: 20px; color: var(--primary);">●</div>
         <ul id="historyList" class="history-list"></ul>
-        <p id="emptyMsg" style="text-align: center; color: #ccc; font-size: 13px;">No saved palettes yet.</p>
+        <p id="emptyMsg" style="text-align: center; color: var(--text-sub); font-size: 13px; display:none; margin-top: 20px;">No saved palettes yet.</p>
     </div>
 </div>
 
-<script>
-    /** * Robust conversion to HEX. 
-     * Browsers sometimes return 'rgb(r,g,b)' from canvas, which breaks <input type="color">.
-     * This ensures we always get a valid #RRGGBB string.
-     */
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, push, onValue, remove, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    // ------------------------------------------------------------------
+    // ⚠️ PASTE YOUR FIREBASE CONFIG HERE ⚠️
+    // ------------------------------------------------------------------
+    const firebaseConfig = {
+        apiKey: "AIzaSyC_kA8hya6OCnfZ4zDwb3N6IpXirgVLtzU",
+        authDomain: "colorapp-ac0e8.firebaseapp.com",
+        projectId: "colorapp-ac0e8",
+        storageBucket: "colorapp-ac0e8.firebasestorage.app",
+        messagingSenderId: "995626940014",
+        appId: "1:995626940014:web:557380d0c2442e64a8987f",
+        databaseURL: "https://colorapp-ac0e8-default-rtdb.firebaseio.com/"
+    };
+    // ------------------------------------------------------------------
+
+    let app, db, dbRef;
+    let currentHistory = [];
+
+    // Common Color Names Dictionary
+    const colorNames = {
+        "#000000": "Black", "#ffffff": "White", "#ff0000": "Red", "#00ff00": "Lime",
+        "#0000ff": "Blue", "#ffff00": "Yellow", "#00ffff": "Cyan", "#ff00ff": "Magenta",
+        "#c0c0c0": "Silver", "#808080": "Gray", "#800000": "Maroon", "#808000": "Olive",
+        "#008000": "Green", "#800080": "Purple", "#008080": "Teal", "#000080": "Navy",
+        "#ffa500": "Orange", "#a52a2a": "Brown", "#ffc0cb": "Pink", "#f0f8ff": "AliceBlue",
+        "#7fffd4": "Aquamarine", "#f5f5dc": "Beige", "#ff7f50": "Coral", "#ffd700": "Gold",
+        "#4b0082": "Indigo", "#f0e68c": "Khaki", "#e6e6fa": "Lavender", "#90ee90": "LightGreen",
+        "#87cefa": "LightSkyBlue", "#191970": "MidnightBlue", "#ffe4e1": "MistyRose",
+        "#ffdead": "NavajoWhite", "#dda0dd": "Plum", "#fa8072": "Salmon", "#2e8b57": "SeaGreen",
+        "#a0522d": "Sienna", "#87ceeb": "SkyBlue", "#6a5acd": "SlateBlue", "#708090": "SlateGray",
+        "#00ff7f": "SpringGreen", "#4682b4": "SteelBlue", "#d2b48c": "Tan", "#d8bfd8": "Thistle",
+        "#ff6347": "Tomato", "#40e0d0": "Turquoise", "#ee82ee": "Violet", "#f5deb3": "Wheat"
+    };
+
+    try {
+        app = initializeApp(firebaseConfig);
+        db = getDatabase(app);
+        dbRef = ref(db, 'palettes');
+        
+        // Update Status UI
+        const badge = document.getElementById('statusBadge');
+        const dot = document.getElementById('statusDot');
+        const txt = document.getElementById('statusText');
+        
+        badge.classList.add('connected');
+        dot.classList.add('active');
+        txt.innerText = "Connected";
+
+    } catch (e) {
+        document.getElementById('statusText').innerText = "Config Error";
+    }
+
+    // Helper Functions
     function standardizeColor(str) {
         if (!str) return null;
         const ctx = document.createElement('canvas').getContext('2d');
         ctx.fillStyle = str;
-        let color = ctx.fillStyle; 
-        
-        // If it's already hex, return it
-        if (color.startsWith('#')) {
-            // Ensure 6 digits (canvas might return #f00 for #ff0000)
-            if (color.length === 4) {
-                return '#' + color[1] + color[1] + color[2] + color[2] + color[3] + color[3];
-            }
-            return color;
+        let color = ctx.fillStyle;
+        if (color.startsWith('#') && color.length === 4) {
+            return '#' + color[1] + color[1] + color[2] + color[2] + color[3] + color[3];
         }
-
-        // If browser returned rgb/rgba, parse it manually to be safe
-        if (color.startsWith('rgb')) {
-            const rgb = color.match(/\d+/g);
-            if (rgb) {
-                return "#" + 
-                    ("0" + parseInt(rgb[0], 10).toString(16)).slice(-2) +
-                    ("0" + parseInt(rgb[1], 10).toString(16)).slice(-2) +
-                    ("0" + parseInt(rgb[2], 10).toString(16)).slice(-2);
-            }
-        }
-        return null;
+        return color;
     }
 
-    function syncInputs(sourceId, targetId) {
-        const source = document.getElementById(sourceId);
-        const target = document.getElementById(targetId);
-        const val = source.value.trim();
-
-        if (source.type === 'color') {
-            // Picker -> Text: Always safe
-            target.value = val;
-        } else {
-            // Text -> Picker: Needs validation and conversion
-            const hex = standardizeColor(val);
-            if (hex) {
-                target.value = hex;
-                source.parentElement.style.borderColor = "#e5e7eb";
-            }
-        }
+    function getColorName(hex) {
+        return colorNames[hex.toLowerCase()] || hex;
     }
 
-    // Safe LocalStorage Wrapper
-    function getHistory() {
-        try {
-            return JSON.parse(localStorage.getItem("paletteHistory")) || [];
-        } catch (e) {
-            console.warn("LocalStorage not available:", e);
-            return window.tempHistory || []; // Fallback to memory
-        }
-    }
-
-    function saveHistory(history) {
-        try {
-            localStorage.setItem("paletteHistory", JSON.stringify(history));
-        } catch (e) {
-            window.tempHistory = history; // Fallback
-        }
-    }
-
-    function showResult(msg, type) {
-        const el = document.getElementById("result");
+    function showFeedback(msg, type) {
+        const el = document.getElementById('result');
         el.innerText = msg;
-        el.style.color = type === 'error' ? 'var(--danger)' : '#10b981';
-        
-        const btn = document.getElementById("checkBtn");
-        if (type === 'error') {
-            btn.classList.add("shake");
-            setTimeout(() => btn.classList.remove("shake"), 500);
-        }
+        el.className = "result show";
+        el.style.color = type === 'error' ? 'var(--danger)' : 'var(--primary)';
+        setTimeout(() => el.className = "result", 3000);
     }
 
-    function checkCombination() {
-        const inputs = ['text1', 'text2', 'text3', 'text4'];
-        let colors = [];
+    // Input Sync Logic
+    ['1','2','3','4'].forEach(num => {
+        const picker = document.getElementById('picker'+num);
+        const text = document.getElementById('text'+num);
+
+        picker.addEventListener('input', (e) => { text.value = e.target.value; });
+        text.addEventListener('input', (e) => {
+            const hex = standardizeColor(e.target.value);
+            if(hex) picker.value = hex;
+        });
+    });
+
+    // Save Logic
+    document.getElementById('saveBtn').addEventListener('click', () => {
+        const colors = [];
         let hasError = false;
 
-        // Validate all non-empty inputs
-        inputs.forEach(id => {
-            const el = document.getElementById(id);
-            const val = el.value.trim();
+        ['1','2','3','4'].forEach(num => {
+            const val = document.getElementById('text'+num).value.trim();
             if (val) {
                 const hex = standardizeColor(val);
-                if (!hex) {
-                    el.parentElement.style.borderColor = "var(--danger)";
-                    hasError = true;
-                } else {
-                    el.parentElement.style.borderColor = "#e5e7eb";
-                    colors.push(val.toLowerCase()); // Store original name
-                }
+                if (hex) colors.push(hex);
+                else hasError = true;
             }
         });
 
-        if (hasError) {
-            showResult("❌ Invalid color detected.", "error");
-            return;
-        }
+        if (hasError) return showFeedback("❌ Invalid color format", "error");
+        if (colors.length === 0) return showFeedback("⚠️ Enter at least one color", "error");
 
-        if (colors.length === 0) {
-            showResult("⚠️ Enter at least one color.", "error");
-            return;
-        }
+        // Duplicate Check
+        const newSig = [...colors].sort().join(',');
+        const exists = currentHistory.some(c => [...c].sort().join(',') === newSig);
 
-        // Check for uniqueness
-        const uniqueColors = [...new Set(colors)].sort();
-        const key = uniqueColors.join(","); 
-        
-        let history = getHistory();
-        
-        // Check if exists (comparing stringified keys)
-        const exists = history.some(item => item.join(",") === key);
+        if (exists) return showFeedback("⚠️ Palette already saved", "error");
 
-        if (exists) {
-            showResult("❌ This palette is already saved.", "error");
-        } else {
-            history.unshift(uniqueColors);
-            saveHistory(history);
-            renderHistory();
-            showResult("✔️ Palette saved!", "success");
-        }
-    }
+        showFeedback("Saving...", "normal");
+        push(dbRef, { colors, timestamp: serverTimestamp() })
+            .then(() => showFeedback("✅ Palette Saved!", "success"))
+            .catch(() => showFeedback("❌ Save Failed", "error"));
+    });
 
-    function deleteItem(index) {
-        let history = getHistory();
-        history.splice(index, 1);
-        saveHistory(history);
-        renderHistory();
-    }
-
-    function renderHistory() {
-        const list = document.getElementById("historyList");
-        const msg = document.getElementById("emptyMsg");
-        const history = getHistory();
-
+    // Real-time History Sync
+    onValue(dbRef, (snapshot) => {
+        const list = document.getElementById('historyList');
+        document.getElementById('loader').style.display = 'none';
         list.innerHTML = "";
+        currentHistory = [];
         
-        if (history.length === 0) {
-            msg.style.display = "block";
+        const data = snapshot.val();
+        if (!data) {
+            document.getElementById('emptyMsg').style.display = 'block';
             return;
         }
-        msg.style.display = "none";
+        document.getElementById('emptyMsg').style.display = 'none';
 
-        history.forEach((palette, index) => {
-            const li = document.createElement("li");
-            li.className = "history-item";
+        Object.entries(data).reverse().forEach(([key, value]) => {
+            if(value.colors) {
+                currentHistory.push(value.colors);
 
-            // Left Side: Colors
-            const preview = document.createElement("div");
-            preview.className = "palette-preview";
+                const li = document.createElement("li");
+                li.className = "history-item";
 
-            palette.forEach(colorStr => {
-                const hex = standardizeColor(colorStr);
-                const dot = document.createElement("div");
-                dot.className = "color-dot";
-                dot.style.backgroundColor = hex;
-                preview.appendChild(dot);
-            });
+                // Labels
+                const labels = value.colors.map(c => getColorName(c)).join(", ");
 
-            // Text Labels
-            const text = document.createElement("span");
-            text.className = "palette-text";
-            text.innerText = palette.join(", ");
-            preview.appendChild(text);
+                // HTML Structure
+                li.innerHTML = `
+                    <div class="palette-info">
+                        <div class="palette-preview">
+                            ${value.colors.map(c => `<div class="color-dot" style="background:${c}"></div>`).join('')}
+                        </div>
+                        <span class="palette-text">${labels}</span>
+                    </div>
+                `;
 
-            // Right Side: Delete Button
-            const btn = document.createElement("button");
-            btn.className = "delete-btn";
-            btn.innerText = "Delete";
-            btn.onclick = function() { deleteItem(index); };
-
-            li.appendChild(preview);
-            li.appendChild(btn);
-            list.appendChild(li);
+                // Trash Button
+                const btn = document.createElement("button");
+                btn.className = "delete-btn";
+                // SVG Trash Icon
+                btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>`;
+                
+                btn.onclick = () => remove(ref(db, 'palettes/' + key));
+                li.appendChild(btn);
+                list.appendChild(li);
+            }
         });
-    }
-
-    // Initial Load
-    renderHistory();
+    });
 </script>
-
 </body>
-
 </html>
