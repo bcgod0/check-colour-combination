@@ -51,17 +51,9 @@
         p.subtitle { margin: 8px 0 0; color: var(--text-sub); font-size: 14px; }
 
         .status-badge {
-            align-self: center;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 12px;
-            background: #f1f5f9;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--text-sub);
-            transition: all 0.3s ease;
+            align-self: center; display: inline-flex; align-items: center; gap: 6px;
+            padding: 4px 12px; background: #f1f5f9; border-radius: 20px;
+            font-size: 12px; font-weight: 500; color: var(--text-sub); transition: all 0.3s ease;
         }
         .status-badge.connected { background: #dcfce7; color: #166534; }
         .dot { width: 6px; height: 6px; border-radius: 50%; background: #94a3b8; }
@@ -69,23 +61,15 @@
 
         /* Toolbar */
         .tools-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: -10px;
-            padding: 0 4px;
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: -10px; padding: 0 4px;
         }
         .tools-label { font-size: 12px; font-weight: 700; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.5px; }
         
         .btn-group { display: flex; gap: 8px; }
-        
         .gen-btn {
-            background: #fff;
-            border: 1px solid #e2e8f0;
-            color: var(--text-main);
-            width: 36px; height: 36px; border-radius: 10px;
-            font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.2s;
-            display: flex; align-items: center; justify-content: center;
+            background: #fff; border: 1px solid #e2e8f0; color: var(--text-main);
+            width: 36px; height: 36px; border-radius: 10px; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center;
         }
         .gen-btn:hover { border-color: var(--primary); color: var(--primary); background: #eff6ff; transform: translateY(-2px); }
 
@@ -124,9 +108,7 @@
             font-family: 'Inter', sans-serif; text-transform: capitalize;
         }
 
-        .contrast-warn {
-            font-size: 14px; cursor: help; display: none; animation: popIn 0.2s ease;
-        }
+        .contrast-warn { font-size: 14px; cursor: help; display: none; animation: popIn 0.2s ease; }
         .contrast-warn.visible { display: block; }
         @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
 
@@ -145,36 +127,53 @@
         .result.show { opacity: 1; }
 
         .history { margin-top: 10px; }
+        .history-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
+        }
         .history h3 {
             font-size: 12px; text-transform: uppercase; letter-spacing: 1px;
-            color: var(--text-sub); font-weight: 700; margin-bottom: 16px;
+            color: var(--text-sub); font-weight: 700; margin: 0;
         }
+
+        /* SEARCH BAR */
+        .filter-row {
+            display: flex; gap: 8px; margin-bottom: 16px;
+        }
+        .search-input {
+            flex: 1;
+            background: var(--input-bg); border: 2px solid transparent;
+            padding: 10px 14px; border-radius: 12px; font-size: 14px;
+            font-family: 'Inter', sans-serif; outline: none; transition: 0.2s;
+        }
+        .search-input:focus { background: #fff; border-color: var(--primary); }
+        
+        .filter-btn {
+            width: 42px; height: 42px; border: none; background: var(--input-bg);
+            border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            color: #cbd5e1; transition: 0.2s; flex-shrink: 0;
+        }
+        .filter-btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; }
+        .filter-btn.active { background: #fef3c7; color: var(--gold); }
+        .filter-btn.active svg { fill: currentColor; }
 
         .history-list {
             list-style: none; padding: 0; margin: 0;
             display: flex; flex-direction: column; gap: 12px;
         }
 
-        /* History Card Styles */
         .history-item {
             background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 16px;
             display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
-            /* No animation here to prevent sortable glitch */
             transition: background 0.2s, border-color 0.2s;
         }
         
-        /* Drag Handle */
-        .drag-handle {
-            cursor: grab; color: #cbd5e1; padding-top: 8px; flex-shrink: 0;
-        }
+        .history-list.filtered .drag-handle { display: none; }
+
+        .drag-handle { cursor: grab; color: #cbd5e1; padding-top: 8px; flex-shrink: 0; }
         .drag-handle:hover { color: var(--text-sub); }
         .sortable-ghost { opacity: 0.4; background: #f1f5f9; border: 1px dashed var(--primary); }
 
-        /* Favorite Style */
-        .history-item.is-favorite {
-            border-color: var(--gold);
-            background: #fffbeb; /* Light yellow tint */
-        }
+        .history-item.is-favorite { border-color: var(--gold); background: #fffbeb; }
 
         .palette-info { display: flex; flex-direction: column; gap: 10px; flex: 1; min-width: 0; }
 
@@ -195,13 +194,18 @@
         .saved-note-link:hover { text-decoration: underline; }
 
         .palette-preview { display: flex; gap: 6px; }
-        .color-dot { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        
+        .color-dot { 
+            width: 24px; height: 24px; border-radius: 50%; border: 2px solid #fff; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: copy; transition: transform 0.1s;
+        }
+        .color-dot:active { transform: scale(0.9); }
+        .color-dot:hover { border-color: #cbd5e1; }
 
         .palette-meta { display: flex; align-items: center; gap: 8px; font-size: 13px; flex-wrap: wrap; }
         .palette-text { color: var(--text-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 400; font-size: 12px; }
         .palette-date { color: var(--text-sub); font-size: 11px; background: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 4px; flex-shrink: 0; }
 
-        /* Right Actions */
         .actions-col { display: flex; gap: 6px; flex-shrink: 0; }
         
         .icon-btn {
@@ -251,23 +255,20 @@
             <div class="picker-wrapper is-empty" id="wrap1"><input type="color" id="picker1" value="#ffffff"></div>
             <input type="text" id="text1" placeholder="Color 1">
         </div>
-        
         <div class="color-row">
             <div class="picker-wrapper is-empty" id="wrap2"><input type="color" id="picker2" value="#ffffff"></div>
             <input type="text" id="text2" placeholder="Color 2">
-            <div class="contrast-warn" id="warn2" title="Low contrast with Color 1">⚠️</div>
+            <div class="contrast-warn" id="warn2" title="Low contrast">⚠️</div>
         </div>
-
         <div class="color-row">
             <div class="picker-wrapper is-empty" id="wrap3"><input type="color" id="picker3" value="#ffffff"></div>
             <input type="text" id="text3" placeholder="Color 3">
-            <div class="contrast-warn" id="warn3" title="Low contrast with Color 2">⚠️</div>
+            <div class="contrast-warn" id="warn3" title="Low contrast">⚠️</div>
         </div>
-
         <div class="color-row">
             <div class="picker-wrapper is-empty" id="wrap4"><input type="color" id="picker4" value="#ffffff"></div>
             <input type="text" id="text4" placeholder="Color 4">
-            <div class="contrast-warn" id="warn4" title="Low contrast with Color 3">⚠️</div>
+            <div class="contrast-warn" id="warn4" title="Low contrast">⚠️</div>
         </div>
     </div>
 
@@ -275,7 +276,17 @@
     <div class="result" id="result"></div>
 
     <div class="history">
-        <h3>Shared History</h3>
+        <div class="history-header">
+            <h3>Shared History</h3>
+        </div>
+        
+        <div class="filter-row">
+            <input type="text" id="searchInput" placeholder="🔍 Search notes or colors..." class="search-input">
+            <button id="favFilterBtn" class="filter-btn" title="Show Favorites Only">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>
+            </button>
+        </div>
+
         <div id="loader" style="text-align: center; font-size: 20px; color: var(--primary);">●</div>
         <ul id="historyList" class="history-list"></ul>
         <p id="emptyMsg" style="text-align: center; color: var(--text-sub); font-size: 13px; display:none; margin-top: 20px;">No saved palettes yet.</p>
@@ -302,7 +313,7 @@
 
     let app, db, dbRef;
     let currentHistory = [];
-    let sortableInstance = null; // Store sortable instance
+    let isFavFilterActive = false;
 
     const colorNames = {
         "#000000": "Black", "#ffffff": "White", "#ff0000": "Red", "#00ff00": "Lime",
@@ -341,114 +352,242 @@
         }
         return color;
     }
-
     function getColorName(hex) { return colorNames[hex.toLowerCase()] || hex; }
-
     function showFeedback(msg, type) {
         const el = document.getElementById('result');
-        el.innerText = msg;
-        el.className = "result show";
+        el.innerText = msg; el.className = "result show";
         el.style.color = type === 'error' ? 'var(--danger)' : 'var(--primary)';
-        setTimeout(() => el.className = "result", 3000);
+        setTimeout(() => el.className = "result", 2000); 
     }
-
     function getLuminance(hex) {
         const rgb = parseInt(hex.slice(1), 16);
-        const r = (rgb >> 16) & 0xff;
-        const g = (rgb >>  8) & 0xff;
-        const b = (rgb >>  0) & 0xff;
+        const r = (rgb >> 16) & 0xff; const g = (rgb >>  8) & 0xff; const b = (rgb >>  0) & 0xff;
         const [lr, lg, lb] = [r, g, b].map(v => {
-            v /= 255;
-            return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+            v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
         });
         return lr * 0.2126 + lg * 0.7152 + lb * 0.0722;
     }
-
     function checkContrast() {
         const colors = [];
         for(let i=1; i<=4; i++) {
             const val = document.getElementById('text'+i).value.trim();
-            const hex = standardizeColor(val);
-            colors.push(hex);
+            const hex = standardizeColor(val); colors.push(hex);
         }
         for(let i=0; i<3; i++) {
-            const hex1 = colors[i];
-            const hex2 = colors[i+1];
+            const hex1 = colors[i]; const hex2 = colors[i+1];
             const warnEl = document.getElementById('warn'+(i+2));
             if (hex1 && hex2) {
-                const l1 = getLuminance(hex1);
-                const l2 = getLuminance(hex2);
+                const l1 = getLuminance(hex1); const l2 = getLuminance(hex2);
                 const ratio = (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
-                if (ratio < 2.0) warnEl.classList.add('visible');
-                else warnEl.classList.remove('visible');
-            } else {
-                warnEl.classList.remove('visible');
-            }
+                if (ratio < 2.0) warnEl.classList.add('visible'); else warnEl.classList.remove('visible');
+            } else { warnEl.classList.remove('visible'); }
         }
     }
-
     function updateInputState(num, hex) {
         const wrap = document.getElementById('wrap'+num);
-        if (hex) wrap.classList.remove('is-empty');
-        else wrap.classList.add('is-empty');
+        if (hex) wrap.classList.remove('is-empty'); else wrap.classList.add('is-empty');
     }
 
-    // --- RANDOMIZER ---
+    // --- SEARCH & FILTER LOGIC ---
+    function filterAndRender() {
+        const query = document.getElementById('searchInput').value.toLowerCase().trim();
+        
+        const filtered = currentHistory.filter(item => {
+            // 1. Fav Filter
+            if (isFavFilterActive && !item.isFavorite) return false;
+            
+            // 2. Search Filter (if empty, match all)
+            if (!query) return true;
+            
+            // Check Note
+            if (item.note && item.note.toLowerCase().includes(query)) return true;
+            // Check Colors (Hex or Name)
+            return item.colors.some(c => {
+                const name = getColorName(c).toLowerCase();
+                return c.includes(query) || name.includes(query);
+            });
+        });
+        
+        renderHistory(filtered);
+    }
+
+    document.getElementById('searchInput').addEventListener('input', filterAndRender);
+    document.getElementById('favFilterBtn').addEventListener('click', () => {
+        isFavFilterActive = !isFavFilterActive;
+        const btn = document.getElementById('favFilterBtn');
+        if(isFavFilterActive) btn.classList.add('active'); else btn.classList.remove('active');
+        filterAndRender();
+    });
+
+    // --- RENDER LOGIC ---
+    function renderHistory(items) {
+        const list = document.getElementById('historyList');
+        list.innerHTML = "";
+        
+        if (items.length === 0) {
+            if(currentHistory.length === 0) document.getElementById('emptyMsg').innerText = "No saved palettes yet.";
+            else document.getElementById('emptyMsg').innerText = "No results found.";
+            document.getElementById('emptyMsg').style.display = 'block';
+            return;
+        }
+        document.getElementById('emptyMsg').style.display = 'none';
+
+        const isFiltering = document.getElementById('searchInput').value.trim() !== "" || isFavFilterActive;
+        if(isFiltering) list.classList.add('filtered'); else list.classList.remove('filtered');
+
+        items.forEach((value) => {
+            if(value.colors) {
+                const li = document.createElement("li");
+                li.className = `history-item ${value.isFavorite ? 'is-favorite' : ''}`;
+                li.setAttribute('data-key', value.key);
+                
+                let dateStr = "";
+                if (value.timestamp) {
+                    dateStr = new Date(value.timestamp).toLocaleString(undefined, { 
+                        month: 'short', day: 'numeric', year: 'numeric',
+                        hour: 'numeric', minute: 'numeric', hour12: true
+                    });
+                }
+                const labels = value.colors.map(c => getColorName(c)).join(", ");
+
+                // Drag Handle
+                const handleDiv = document.createElement('div');
+                handleDiv.className = 'drag-handle';
+                handleDiv.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg>`;
+                li.appendChild(handleDiv);
+
+                // Info
+                const infoDiv = document.createElement('div');
+                infoDiv.className = 'palette-info';
+
+                const noteContainer = document.createElement('div');
+                noteContainer.className = 'note-container';
+                if (value.note) {
+                    if (value.note.startsWith('http')) {
+                        const noteLink = document.createElement('a');
+                        noteLink.className = 'saved-note-link'; noteLink.href = value.note; noteLink.target = '_blank';
+                        noteLink.innerText = value.note; noteContainer.appendChild(noteLink);
+                    } else {
+                        const noteText = document.createElement('span');
+                        noteText.className = 'saved-note-text'; noteText.innerText = value.note; noteContainer.appendChild(noteText);
+                    }
+                }
+                const noteInput = document.createElement('input');
+                noteInput.className = 'mini-note-input'; noteInput.placeholder = "Type note or URL & hit Enter..."; noteInput.type = "text";
+                if(value.note) noteInput.value = value.note; 
+                noteInput.onkeydown = (e) => {
+                    if(e.key === 'Enter') {
+                        const txt = noteInput.value.trim();
+                        if(txt) update(ref(db, 'palettes/'+value.key), { note: txt });
+                        else update(ref(db, 'palettes/'+value.key), { note: null }); 
+                        noteInput.classList.remove('active');
+                    }
+                };
+                noteContainer.appendChild(noteInput);
+                infoDiv.appendChild(noteContainer);
+
+                // Colors Preview (with Robust Click-to-Copy)
+                const previewDiv = document.createElement('div');
+                previewDiv.className = 'palette-preview';
+                value.colors.forEach(c => {
+                    const d = document.createElement('div');
+                    d.className = 'color-dot'; d.style.backgroundColor = c;
+                    d.title = `Copy ${c}`;
+                    d.onclick = () => {
+                        // Fallback copy for local files or insecure contexts
+                        if (!navigator.clipboard) {
+                            const textArea = document.createElement("textarea");
+                            textArea.value = c;
+                            document.body.appendChild(textArea);
+                            textArea.select();
+                            try {
+                                document.execCommand('copy');
+                                showFeedback(`Copied ${c}!`, 'normal');
+                            } catch (err) {
+                                showFeedback("Copy failed", "error");
+                            }
+                            document.body.removeChild(textArea);
+                            return;
+                        }
+                        // Modern Copy
+                        navigator.clipboard.writeText(c).then(() => {
+                            showFeedback(`Copied ${c}!`, 'normal');
+                        }).catch(() => showFeedback("Copy failed", "error"));
+                    };
+                    previewDiv.appendChild(d);
+                });
+                infoDiv.appendChild(previewDiv);
+
+                const metaDiv = document.createElement('div');
+                metaDiv.className = 'palette-meta';
+                const textSpan = document.createElement('span'); textSpan.className = 'palette-text'; textSpan.innerText = labels;
+                metaDiv.appendChild(textSpan);
+                if(dateStr) {
+                    const dateSpan = document.createElement('span'); dateSpan.className = 'palette-date'; dateSpan.innerText = dateStr;
+                    metaDiv.appendChild(dateSpan);
+                }
+                infoDiv.appendChild(metaDiv);
+                li.appendChild(infoDiv);
+
+                // Actions
+                const actionsDiv = document.createElement('div');
+                actionsDiv.className = 'actions-col';
+                
+                const starBtn = document.createElement("button");
+                starBtn.className = `icon-btn star-btn ${value.isFavorite ? 'active' : ''}`;
+                starBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="${value.isFavorite ? 'currentColor' : 'none'}" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>`;
+                starBtn.onclick = () => update(ref(db, 'palettes/'+value.key), { isFavorite: !value.isFavorite });
+
+                const noteBtn = document.createElement("button");
+                noteBtn.className = "icon-btn note-btn";
+                noteBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>`;
+                noteBtn.onclick = () => { noteInput.classList.toggle('active'); if(noteInput.classList.contains('active')) noteInput.focus(); };
+
+                const delBtn = document.createElement("button");
+                delBtn.className = "icon-btn delete-btn";
+                delBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>`;
+                delBtn.onclick = () => remove(ref(db, 'palettes/' + value.key));
+
+                actionsDiv.appendChild(starBtn); actionsDiv.appendChild(noteBtn); actionsDiv.appendChild(delBtn);
+                li.appendChild(actionsDiv); list.appendChild(li);
+            }
+        });
+    }
+
+    // --- GEN & INPUT LISTENERS ---
     function generatePalette(count) {
         ['1','2','3','4'].forEach((num, index) => {
             const picker = document.getElementById('picker'+num);
             const text = document.getElementById('text'+num);
             if (index < count) {
                 const randomColor = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
-                picker.value = randomColor;
-                text.value = randomColor;
-                updateInputState(num, randomColor);
+                picker.value = randomColor; text.value = randomColor; updateInputState(num, randomColor);
             } else {
-                text.value = "";
-                picker.value = "#ffffff";
-                updateInputState(num, null);
+                text.value = ""; picker.value = "#ffffff"; updateInputState(num, null);
             }
         });
         checkContrast();
     }
-
     document.getElementById('rand2').onclick = () => generatePalette(2);
     document.getElementById('rand3').onclick = () => generatePalette(3);
     document.getElementById('rand4').onclick = () => generatePalette(4);
 
-    // --- INPUT LISTENERS ---
     ['1','2','3','4'].forEach(num => {
-        const picker = document.getElementById('picker'+num);
-        const text = document.getElementById('text'+num);
-        picker.addEventListener('input', (e) => { 
-            text.value = e.target.value; 
-            updateInputState(num, e.target.value);
-            checkContrast(); 
-        });
+        const picker = document.getElementById('picker'+num); const text = document.getElementById('text'+num);
+        picker.addEventListener('input', (e) => { text.value = e.target.value; updateInputState(num, e.target.value); checkContrast(); });
         text.addEventListener('input', (e) => {
-            const val = e.target.value.trim();
-            const hex = standardizeColor(val);
-            if(hex) {
-                picker.value = hex;
-                updateInputState(num, hex);
-                checkContrast();
-            } else if (val === "") {
-                updateInputState(num, null);
-            }
+            const val = e.target.value.trim(); const hex = standardizeColor(val);
+            if(hex) { picker.value = hex; updateInputState(num, hex); checkContrast(); }
+            else if (val === "") { updateInputState(num, null); }
         });
     });
 
-    // --- SAVE LOGIC ---
+    // --- SAVE ---
     document.getElementById('saveBtn').addEventListener('click', () => {
-        const colors = [];
-        let hasError = false;
+        const colors = []; let hasError = false;
         ['1','2','3','4'].forEach(num => {
             const val = document.getElementById('text'+num).value.trim();
-            if (val) {
-                const hex = standardizeColor(val);
-                if (hex) colors.push(hex);
-                else hasError = true;
-            }
+            if (val) { const hex = standardizeColor(val); if (hex) colors.push(hex); else hasError = true; }
         });
 
         if (hasError) return showFeedback("❌ Invalid color format", "error");
@@ -469,201 +608,46 @@
         }
 
         showFeedback("Saving...", "normal");
-        
-        // Save with default order = current timestamp (so it appears at top if we sort desc)
-        push(dbRef, { 
-            colors, 
-            order: Date.now(),
-            isFavorite: false,
-            timestamp: serverTimestamp() 
-        })
+        push(dbRef, { colors, order: Date.now(), isFavorite: false, timestamp: serverTimestamp() })
         .then(() => {
             showFeedback("✅ Palette Saved!", "success");
             ['1','2','3','4'].forEach(n => {
-                document.getElementById('text'+n).value = '';
-                document.getElementById('picker'+n).value = '#ffffff'; 
-                updateInputState(n, null);
+                document.getElementById('text'+n).value = ''; document.getElementById('picker'+n).value = '#ffffff'; updateInputState(n, null);
             });
             document.querySelectorAll('.contrast-warn').forEach(el => el.classList.remove('visible'));
         })
         .catch(() => showFeedback("❌ Save Failed", "error"));
     });
 
-    // --- HISTORY RENDER & DRAG LOGIC ---
-    const historyListEl = document.getElementById('historyList');
-
-    // Init SortableJS
-    sortableInstance = new Sortable(historyListEl, {
-        handle: '.drag-handle',
-        animation: 150,
-        ghostClass: 'sortable-ghost',
+    // --- INIT SORTABLE & DATA LISTENER ---
+    new Sortable(document.getElementById('historyList'), {
+        handle: '.drag-handle', animation: 150, ghostClass: 'sortable-ghost',
         onEnd: function (evt) {
-            // Reordering Logic: Update indices in Firebase
-            // Simple approach: Iterate DOM and update 'order' based on new index
-            // We want top item = highest order value (descending sort)
-            const items = historyListEl.children;
-            const updates = {};
-            const baseTime = Date.now();
-            
+            const items = document.getElementById('historyList').children;
+            const updates = {}; const baseTime = Date.now();
             Array.from(items).forEach((item, index) => {
                 const key = item.getAttribute('data-key');
-                // Assign new order: Highest value for first item
-                // Use (baseTime - index) to keep relative order
                 updates[key + '/order'] = baseTime - (index * 1000); 
             });
-            
             update(ref(db, 'palettes'), updates);
         }
     });
 
     onValue(dbRef, (snapshot) => {
         document.getElementById('loader').style.display = 'none';
-        
         const data = snapshot.val();
-        if (!data) {
-            historyListEl.innerHTML = "";
-            document.getElementById('emptyMsg').style.display = 'block';
-            currentHistory = [];
-            return;
+        currentHistory = [];
+        if (data) {
+            // Sort raw data first
+            let items = Object.entries(data).map(([key, value]) => ({ key, ...value }));
+            items.sort((a, b) => {
+                const orderA = a.order || a.timestamp || 0; const orderB = b.order || b.timestamp || 0;
+                return orderB - orderA;
+            });
+            currentHistory = items;
         }
-        document.getElementById('emptyMsg').style.display = 'none';
-
-        // Convert to array and SORT by 'order' (descending)
-        let items = Object.entries(data).map(([key, value]) => ({ key, ...value }));
-        
-        // Sorting: 
-        // 1. If order exists, sort by order (desc)
-        // 2. Fallback to timestamp (desc)
-        items.sort((a, b) => {
-            const orderA = a.order || a.timestamp || 0;
-            const orderB = b.order || b.timestamp || 0;
-            return orderB - orderA;
-        });
-
-        currentHistory = items; // Update local cache
-
-        // Clear list and rebuild
-        historyListEl.innerHTML = "";
-
-        items.forEach((value) => {
-            if(value.colors) {
-                const li = document.createElement("li");
-                li.className = `history-item ${value.isFavorite ? 'is-favorite' : ''}`;
-                li.setAttribute('data-key', value.key); // Important for drag ID
-                
-                let dateStr = "";
-                if (value.timestamp) {
-                    dateStr = new Date(value.timestamp).toLocaleString(undefined, { 
-                        month: 'short', day: 'numeric', year: 'numeric',
-                        hour: 'numeric', minute: 'numeric', hour12: true
-                    });
-                }
-                const labels = value.colors.map(c => getColorName(c)).join(", ");
-
-                // 1. Drag Handle
-                const handleDiv = document.createElement('div');
-                handleDiv.className = 'drag-handle';
-                // 6 dots icon
-                handleDiv.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg>`;
-                li.appendChild(handleDiv);
-
-                // 2. Info Container
-                const infoDiv = document.createElement('div');
-                infoDiv.className = 'palette-info';
-
-                const noteContainer = document.createElement('div');
-                noteContainer.className = 'note-container';
-                
-                if (value.note) {
-                    if (value.note.startsWith('http')) {
-                        const noteLink = document.createElement('a');
-                        noteLink.className = 'saved-note-link';
-                        noteLink.href = value.note; noteLink.target = '_blank';
-                        noteLink.innerText = value.note; noteContainer.appendChild(noteLink);
-                    } else {
-                        const noteText = document.createElement('span');
-                        noteText.className = 'saved-note-text';
-                        noteText.innerText = value.note; noteContainer.appendChild(noteText);
-                    }
-                }
-
-                const noteInput = document.createElement('input');
-                noteInput.className = 'mini-note-input';
-                noteInput.placeholder = "Type note or URL & hit Enter...";
-                noteInput.type = "text";
-                if(value.note) noteInput.value = value.note; 
-
-                noteInput.onkeydown = (e) => {
-                    if(e.key === 'Enter') {
-                        const txt = noteInput.value.trim();
-                        if(txt) update(ref(db, 'palettes/'+value.key), { note: txt });
-                        else update(ref(db, 'palettes/'+value.key), { note: null }); 
-                        noteInput.classList.remove('active');
-                    }
-                };
-                noteContainer.appendChild(noteInput);
-                infoDiv.appendChild(noteContainer);
-
-                // Colors
-                const previewDiv = document.createElement('div');
-                previewDiv.className = 'palette-preview';
-                value.colors.forEach(c => {
-                    const d = document.createElement('div');
-                    d.className = 'color-dot'; d.style.backgroundColor = c;
-                    previewDiv.appendChild(d);
-                });
-                infoDiv.appendChild(previewDiv);
-
-                // Meta
-                const metaDiv = document.createElement('div');
-                metaDiv.className = 'palette-meta';
-                const textSpan = document.createElement('span');
-                textSpan.className = 'palette-text'; textSpan.innerText = labels;
-                metaDiv.appendChild(textSpan);
-                if(dateStr) {
-                    const dateSpan = document.createElement('span');
-                    dateSpan.className = 'palette-date'; dateSpan.innerText = dateStr;
-                    metaDiv.appendChild(dateSpan);
-                }
-                infoDiv.appendChild(metaDiv);
-                li.appendChild(infoDiv);
-
-                // 3. Actions
-                const actionsDiv = document.createElement('div');
-                actionsDiv.className = 'actions-col';
-
-                // Star Button
-                const starBtn = document.createElement("button");
-                starBtn.className = `icon-btn star-btn ${value.isFavorite ? 'active' : ''}`;
-                // Star Icon
-                starBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="${value.isFavorite ? 'currentColor' : 'none'}" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>`;
-                starBtn.onclick = () => {
-                    update(ref(db, 'palettes/'+value.key), { isFavorite: !value.isFavorite });
-                };
-
-                // Note Button
-                const noteBtn = document.createElement("button");
-                noteBtn.className = "icon-btn note-btn";
-                noteBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>`;
-                noteBtn.onclick = () => {
-                    noteInput.classList.toggle('active');
-                    if(noteInput.classList.contains('active')) noteInput.focus();
-                };
-
-                // Delete Button
-                const delBtn = document.createElement("button");
-                delBtn.className = "icon-btn delete-btn";
-                delBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>`;
-                delBtn.onclick = () => remove(ref(db, 'palettes/' + value.key));
-
-                actionsDiv.appendChild(starBtn);
-                actionsDiv.appendChild(noteBtn);
-                actionsDiv.appendChild(delBtn);
-
-                li.appendChild(actionsDiv);
-                historyListEl.appendChild(li);
-            }
-        });
+        // Apply Filters & Render
+        filterAndRender();
     });
 </script>
 </body>
