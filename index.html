@@ -135,17 +135,48 @@
             color: var(--text-sub); font-weight: 700; margin: 0;
         }
 
-        /* SEARCH BAR */
+        /* --- UPDATED SEARCH & FILTER --- */
         .filter-row {
-            display: flex; gap: 8px; margin-bottom: 16px;
+            display: flex; justify-content: flex-end; gap: 8px; margin-bottom: 16px;
         }
+
+        .search-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: var(--input-bg);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            width: 42px; /* Initial closed width */
+            overflow: hidden;
+        }
+
+        .search-wrapper.active {
+            width: 100%; /* Expands to full available width */
+            background: #fff;
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+
+        .search-toggle {
+            width: 42px; height: 42px;
+            border: none; background: transparent;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: #64748b; flex-shrink: 0;
+        }
+        .search-toggle svg { width: 20px; height: 20px; stroke-width: 2; }
+
         .search-input {
-            flex: 1;
-            background: var(--input-bg); border: 2px solid transparent;
-            padding: 10px 14px; border-radius: 12px; font-size: 14px;
-            font-family: 'Inter', sans-serif; outline: none; transition: 0.2s;
+            width: 100%;
+            border: none; background: transparent; outline: none;
+            font-size: 14px; font-family: 'Inter', sans-serif; color: var(--text-main);
+            padding-right: 12px;
+            opacity: 0; pointer-events: none; /* Hidden initially */
+            transition: 0.2s;
         }
-        .search-input:focus { background: #fff; border-color: var(--primary); }
+
+        .search-wrapper.active .search-input {
+            opacity: 1; pointer-events: auto;
+        }
         
         .filter-btn {
             width: 42px; height: 42px; border: none; background: var(--input-bg);
@@ -281,7 +312,13 @@
         </div>
         
         <div class="filter-row">
-            <input type="text" id="searchInput" placeholder="🔍 Search notes or colors..." class="search-input">
+            <div class="search-wrapper" id="searchWrapper">
+                <button class="search-toggle" id="searchToggle" title="Search">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                </button>
+                <input type="text" id="searchInput" class="search-input" placeholder="Search...">
+            </div>
+            
             <button id="favFilterBtn" class="filter-btn" title="Show Favorites Only">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>
             </button>
@@ -388,9 +425,24 @@
         if (hex) wrap.classList.remove('is-empty'); else wrap.classList.add('is-empty');
     }
 
+    // --- SEARCH BAR TOGGLE ---
+    const searchToggle = document.getElementById('searchToggle');
+    const searchWrapper = document.getElementById('searchWrapper');
+    const searchInput = document.getElementById('searchInput');
+
+    searchToggle.addEventListener('click', () => {
+        searchWrapper.classList.toggle('active');
+        if (searchWrapper.classList.contains('active')) {
+            searchInput.focus();
+        } else {
+            // Optional: clear search when closing? 
+            // searchInput.value = ''; filterAndRender();
+        }
+    });
+
     // --- SEARCH & FILTER LOGIC ---
     function filterAndRender() {
-        const query = document.getElementById('searchInput').value.toLowerCase().trim();
+        const query = searchInput.value.toLowerCase().trim();
         
         const filtered = currentHistory.filter(item => {
             // 1. Fav Filter
@@ -411,7 +463,7 @@
         renderHistory(filtered);
     }
 
-    document.getElementById('searchInput').addEventListener('input', filterAndRender);
+    searchInput.addEventListener('input', filterAndRender);
     document.getElementById('favFilterBtn').addEventListener('click', () => {
         isFavFilterActive = !isFavFilterActive;
         const btn = document.getElementById('favFilterBtn');
@@ -432,7 +484,7 @@
         }
         document.getElementById('emptyMsg').style.display = 'none';
 
-        const isFiltering = document.getElementById('searchInput').value.trim() !== "" || isFavFilterActive;
+        const isFiltering = searchInput.value.trim() !== "" || isFavFilterActive;
         if(isFiltering) list.classList.add('filtered'); else list.classList.remove('filtered');
 
         items.forEach((value) => {
